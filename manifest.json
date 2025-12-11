@@ -1,7 +1,8 @@
 {
+  "id": "haverokfm",
   "name": "Haverok FM",
   "short_name": "HaverokFM",
-  "description": "Good music halo",
+  "description": "This is an internet radio by Haverok for Haverok. Made by Erik.",
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#595555",
@@ -13,9 +14,12 @@
       "type": "image/png"
     },
     {
-      "src": "/media/icon.png",
+      "src": "/media/logo512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
+  ],
+  "categories": [
+    "music"
   ]
 }
