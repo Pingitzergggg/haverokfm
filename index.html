@@ -84,8 +84,8 @@
     html, body {
       margin: 0;
       padding: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       overflow: hidden;
       touch-action: pan-y;
       background-color: #0a0a0a;
@@ -520,7 +520,7 @@
     /* 7) Bottom controls - Liquid Glass style */
     #controls {
       position: absolute;
-      bottom: 5%;
+      bottom: calc(32px + env(safe-area-inset-bottom));
       left: 50%;
       transform: translateX(-50%);
       background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 100%);
