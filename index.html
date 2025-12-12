@@ -1,75 +1,121 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-
-  <!-- PWA Compatibility -->
-  <link rel="manifest" href="manifest.json">
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" content="Haverok FM - Mindenféle zenék a 80-as évektől teljesen mostanáig. Internet rádió by haverok for haverok.">
   <meta name="keywords" content="HaverokFM, haverokfm, Haverokfm, haverok fm, Haverok FM, HAVEROKFM, haverok FM, Haverok fm, rádió, internet radio, zene, magyar rádió, online rádió">
   <meta name="author" content="Erik">
-  <meta name="theme-color" content="#311B0B">
+  <meta name="theme-color" content="#0a0a0a">
   
   <!-- Open Graph / Facebook / Discord -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="HaverokFM">
+  <meta property="og:title" content="HaverokFM - Internet Rádió">
   <meta property="og:description" content="Mindenféle zenék a 80-as évektől teljesen mostanáig. By haverok for haverok.">
-  <meta property="og:image" content="https://media.discordapp.net/attachments/1170847305902075907/1448090781318516887/haverokfmm.png?ex=6939ff22&is=6938ada2&hm=908f91c7ba95b84f1f3e38dddce4972cd302bd88f0d79fae3ade243af3e664de&=&format=webp&quality=lossless">
+  <meta property="og:image" content="https://erik-server.ddns.net/image">
   <meta property="og:url" content="https://erik-server.ddns.net">
   
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="HaverokFM">
+  <meta name="twitter:title" content="HaverokFM - Internet Rádió">
   <meta name="twitter:description" content="Mindenféle zenék a 80-as évektől teljesen mostanáig.">
-  <meta name="twitter:image" content="https://media.discordapp.net/attachments/1170847305902075907/1448090781318516887/haverokfmm.png?ex=6939ff22&is=6938ada2&hm=908f91c7ba95b84f1f3e38dddce4972cd302bd88f0d79fae3ade243af3e664de&=&format=webp&quality=lossless">
+  <meta name="twitter:image" content="https://erik-server.ddns.net/image">
   
   <!-- Apple -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="HaverokFM">
   
-  <title>HaverokFM</title>
-  <link rel="icon" type="image/png" href="https://media.discordapp.net/attachments/1170847305902075907/1448090781318516887/haverokfmm.png?ex=6939ff22&is=6938ada2&hm=908f91c7ba95b84f1f3e38dddce4972cd302bd88f0d79fae3ade243af3e664de&=&format=webp&quality=lossless">
-
-  <!-- Service Worker (Required for PWA) -->
-  <script src="service-worker.js"></script>
-
+  <title>HaverokFM - Internet Rádió</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M20 70 A40 40 0 0 1 20 30' stroke='%23fff' stroke-width='6' fill='none' stroke-linecap='round'/><path d='M32 62 A25 25 0 0 1 32 38' stroke='%23fff' stroke-width='6' fill='none' stroke-linecap='round'/><path d='M44 54 A10 10 0 0 1 44 46' stroke='%23fff' stroke-width='6' fill='none' stroke-linecap='round'/><path d='M80 70 A40 40 0 0 0 80 30' stroke='%23fff' stroke-width='6' fill='none' stroke-linecap='round'/><path d='M68 62 A25 25 0 0 0 68 38' stroke='%23fff' stroke-width='6' fill='none' stroke-linecap='round'/><path d='M56 54 A10 10 0 0 0 56 46' stroke='%23fff' stroke-width='6' fill='none' stroke-linecap='round'/></svg>">
   <style>
     /*----------------------------------------*/
-    /* 1) Prevent all scrolling/overflow       */
+    /* INTRO / LOADING SCREEN - Simple fade   */
+    #intro {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0a0a0a;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
+    #intro.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    #intro-logo {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: clamp(2rem, 8vw, 4rem);
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeInUp 0.8s ease forwards;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /*----------------------------------------*/
+    /* 1) Dark mode base                       */
+    :root {
+      --theme-color: 100, 100, 255;
+      --theme-glow: rgba(var(--theme-color), 0.25);
+      --theme-glow-soft: rgba(var(--theme-color), 0.12);
+      --theme-glow-strong: rgba(var(--theme-color), 0.4);
+    }
     html, body {
       margin: 0;
       padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
       touch-action: pan-y;
-      background-color: #311B0B;
+      background-color: #0a0a0a;
+      position: relative;
       color: #fff;
       font-family: 'Segoe UI', Arial, sans-serif;
       box-sizing: border-box;
       transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
     body.stats-open {
-      transform: translateX(-280px);
+      transform: translateX(-320px);
       overflow: hidden;
     }
 
     /*----------------------------------------*/
-    /* 2) Blurred background image            */
-    #bg-blur {
+    /* 2) Background - dark with subtle blur  */
+    .bg-blur {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
       object-position: center;
-      filter: blur(25px) brightness(0.7);
+      filter: blur(60px) saturate(1.4) brightness(0.6);
+      opacity: 0;
       pointer-events: none;
       z-index: 0;
-      transition: opacity 0.5s ease;
+      transition: opacity 4s ease;
+    }
+    .bg-blur.active {
+      opacity: 0.7;
     }
 
     /*----------------------------------------*/
@@ -82,271 +128,241 @@
       height: 56px;
       pointer-events: none;
       z-index: 2;
-      overflow: visible; /* EZ FONTOS! */
     }
     #logo {
       position: absolute;
       top: calc(16px + env(safe-area-inset-top));
-      left: calc(16px + env(safe-area-inset-left));
-      font-size: 1.5rem;
-      font-weight: 600;
-      letter-spacing: 2px;
+      left: calc(24px + env(safe-area-inset-left));
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: 3px;
       pointer-events: auto;
       user-select: none;
       color: #fff;
+      text-transform: uppercase;
+      text-shadow: 0 0 20px var(--theme-glow), 0 0 40px var(--theme-glow), 0 0 60px var(--theme-glow-soft);
+      transition: text-shadow 1s ease;
     }
 
-    /* Duplikált info (About) gomb a fullscreen mellé */
-    #info-btn-wrapper2 {
-      position: absolute;
-      top: 0;
-      right: calc(64px + 48px + env(safe-area-inset-right));
-    }
-    #info-btn2 {
-      width: 200px;
-      position: absolute;
-      top: calc(12px + env(safe-area-inset-top));
-      right: calc(1px + env(safe-area-inset-right));
-      height: 40px;
-      min-width: 40px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 10px;
-      color: #fff;
-      cursor: pointer;
-      outline: none;
-      pointer-events: auto;
-      user-select: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.15s ease, transform 0.08s ease;
-    }
-    #info-btn2:hover {
-      background: rgba(255,255,255,0.1);
-    }
-    #info-btn2:active {
-      transform: scale(0.98);
-    }
-    #info-btn2 svg {
-      width: 20px;
-      height: 20px;
-    }
-
-    /* info (About) button */
+    /* info (About) button - Liquid Glass style with 3D */
     #info-btn {
       position: absolute;
       top: calc(12px + env(safe-area-inset-top));
-      right: calc(64px + env(safe-area-inset-right));
-      height: 40px;
-      min-width: 40px;
-      padding: 0;
+      right: calc(72px + env(safe-area-inset-right));
+      height: 44px;
+      min-width: 44px;
+      padding: 0 16px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 10px;
+      gap: 8px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50px;
       color: #fff;
       cursor: pointer;
       outline: none;
       pointer-events: auto;
       user-select: none;
-      transition: background 0.15s ease, transform 0.08s ease;
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  transform 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.7s ease;
+      transform-style: preserve-3d;
+      box-shadow: 
+        0 4px 24px rgba(0,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.2),
+        inset 0 -1px 0 rgba(0,0,0,0.1);
     }
+    
+    /* Auto-hide UI classes */
+    body.ui-hidden #info-btn {
+      transform: translateY(-80px);
+      opacity: 0;
+      pointer-events: none;
+      transition-delay: 0s;
+    }
+    
+    body.ui-hidden #fullscreen-btn {
+      transform: translateY(-80px);
+      opacity: 0;
+      pointer-events: none;
+      transition-delay: 0.15s;
+    }
+    
+    /* Show animation - reverse order */
+    body:not(.ui-hidden) #info-btn {
+      transition-delay: 0.15s;
+    }
+    
+    body:not(.ui-hidden) #fullscreen-btn {
+      transition-delay: 0s;
+    }
+    
+    body.ui-hidden #controls {
+      transform: translateX(-50%) translateY(120px);
+      opacity: 0;
+      pointer-events: none;
+    }
+    
     #info-btn:hover {
-      background: rgba(255,255,255,0.1);
+      transform: rotateX(10deg) rotateY(-8deg) scale(1.1);
+      background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
+      border-color: rgba(var(--theme-color), 0.5);
+      box-shadow: 
+        0 15px 40px rgba(0,0,0,0.5),
+        0 0 30px var(--theme-glow),
+        0 0 60px var(--theme-glow-soft),
+        inset 0 1px 0 rgba(255,255,255,0.4);
     }
     #info-btn:active {
-      transform: scale(0.98);
+      transform: scale(0.95);
+      transition: all 0.1s ease;
     }
     #info-btn svg {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
     }
 
-    /* Fullscreen button */
-    #fullscreen-btn {
-      position: absolute;
-      top: calc(12px + env(safe-area-inset-top));
-      right: calc(16px + env(safe-area-inset-right));
-      height: 40px;
-      min-width: 40px;
-      padding: 0;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 10px;
-      color: #fff;
-      cursor: pointer;
-      outline: none;
-      pointer-events: auto;
-      user-select: none;
-      transition: background 0.15s ease, transform 0.08s ease;
-    }
-    #fullscreen-btn:hover {
-      background: rgba(255,255,255,0.1);
-    }
-    #fullscreen-btn:active {
-      transform: scale(0.98);
-    }
-    #fullscreen-btn svg {
-      width: 20px;
-      height: 20px;
-    }
-
-    /* info notification (új) */
-    #info-notification {
-      position: absolute;
-      left: 100%;
-      top: 50%;
-      transform: translateY(-50%);
-      background: linear-gradient(135deg, #311B0B 0%, #4a2a15 100%);
-      color: #fff;
-      font-size: 1rem;
-      font-weight: 600;
-      padding: 9px 18px 9px 18px;
-      border-radius: 12px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.28);
-      border: 1px solid rgba(255,255,255,0.13);
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      animation: fadeIn 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
-      transition: opacity 0.3s, transform 0.3s;
-      opacity: 1;
-      pointer-events: auto;
-      user-select: none;
-      min-width: 150px;
-      white-space: nowrap;
-    }
-    #info-notification .arrow-left {
-      display: block;
-      width: 0;
-      height: 0;
-      border-top: 10px solid transparent;
-      border-bottom: 10px solid transparent;
-      border-right: 14px solid #4a2a15;
-      margin-left: -12px;
-      margin-right: 0;
-      filter: drop-shadow(0 0 6px #4ade80aa);
-      animation: arrowBubblePulse 1.2s infinite alternate;
-    }
-
-    /*----------------------------------------*/
-    /* 4) Modern stats panel */
+    /* Modern stats panel - Dark mode style */
     #stats-panel {
       position: fixed;
       top: 0;
       right: 0;
-      width: 280px;
+      width: 320px;
       height: 100vh;
-      background: rgba(0, 0, 0, 0.4);
-      color: #eaeaea;
-      padding: 24px;
+      background: #141414;
+      color: #fff;
+      padding: 32px;
       box-sizing: border-box;
       z-index: 3000;
-      border-left: 1px solid rgba(255,255,255,0.04);
-      backdrop-filter: blur(25px) brightness(0.7);
+      border-left: 1px solid rgba(255, 255, 255, 0.08);
       overflow-y: auto;
       overflow-x: hidden;
       transform: translateX(100%);
       transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      box-shadow: 0 14px 34px rgba(0,0,0,0.45);
+      box-shadow: -20px 0 60px rgba(0,0,0,0.5);
     }
     #stats-panel.active {
       transform: translateX(0);
     }
     #stats-panel h2 {
-      margin: calc(56px + env(safe-area-inset-top)) 0 12px;
-      font-size: 1.3rem;
-      font-weight: 700;
+      margin: calc(40px + env(safe-area-inset-top)) 0 16px;
+      font-size: 2rem;
+      font-weight: 800;
       color: #fff;
-      letter-spacing: 0;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
     #stats-panel .divider {
-      height: 1px;
-      background: rgba(255, 255, 255, 0.08);
-      margin: 16px 0;
+      height: 2px;
+      background: linear-gradient(90deg, #fff 0%, transparent 100%);
+      margin: 24px 0;
+      border-radius: 2px;
     }
     #stats-panel p {
-      margin: 0 0 16px;
+      margin: 0 0 20px;
       font-size: 1.1rem;
-      color: #cfcfcf;
-      line-height: 1.4;
+      color: #888;
+      line-height: 1.6;
     }
     .stat-group {
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
     .stat-group h3 {
-      margin: 0 0 10px;
-      font-size: 1rem;
+      margin: 0 0 12px;
+      font-size: 0.85rem;
       font-weight: 700;
-      color: #fff;
+      color: #666;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
     .stat-item {
       display: flex;
       justify-content: space-between;
-      padding: 6px 0;
-      border: none;
+      align-items: center;
+      padding: 12px 16px;
+      background: #1e1e1e;
+      border-radius: 12px;
+      margin-bottom: 8px;
       font-size: 1rem;
     }
     .stat-label {
-      color: #9a9a9a;
+      color: #888;
       font-weight: 500;
     }
     .stat-value {
-      color: #cfcfcf;
-      font-weight: 500;
-      text-align: right;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.1rem;
     }
     #close-stats {
       position: absolute;
-      top: calc(12px + env(safe-area-inset-top));
-      right: 16px;
-      background: transparent;
-      border: none;
-      color: #cfcfcf;
-      font-size: 24px;
+      top: calc(16px + env(safe-area-inset-top));
+      right: 24px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
       cursor: pointer;
-      padding: 0;
-      border-radius: 0;
-      transition: color 0.15s ease;
-      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-style: preserve-3d;
+      box-shadow: 
+        0 4px 16px rgba(0,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.2);
     }
     #close-stats:hover {
-      color: #fff;
+      transform: rotateX(10deg) scale(1.15);
+      background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
+      border-color: rgba(255,255,255,0.4);
+      box-shadow: 
+        0 15px 40px rgba(0,0,0,0.5),
+        0 0 20px rgba(255,255,255,0.15);
     }
     #close-stats:active {
-      transform: scale(0.95);
+      transform: scale(0.9) rotate(90deg);
+      transition: all 0.15s ease;
     }
 
     /*----------------------------------------*/
-    /* 5) Status indicator (slides up from controls) */
+    /* 5) Status indicator - Liquid Glass style */
     #status-indicator {
-      position: absolute;
-      bottom: 100%;
+      position: fixed;
+      bottom: calc(120px + env(safe-area-inset-bottom));
       left: 50%;
-      transform: translateX(-50%) translateY(100%);
-      background: rgba(0, 0, 0, 0.6);
-      border-radius: 32px;
-      padding: 8px 16px;
+      transform: translateX(-50%) translateY(20px);
+      background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.08) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 50px;
+      padding: 10px 20px;
       color: #fff;
       font-size: 0.9rem;
-      font-weight: 500;
+      font-weight: 600;
+      letter-spacing: 1px;
       display: flex;
       align-items: center;
-      gap: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
+      gap: 10px;
+      box-shadow: 
+        0 4px 24px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.2);
       opacity: 0;
       transition: transform 0.3s ease, opacity 0.3s ease;
       pointer-events: none;
-      margin-bottom: 8px;
+      z-index: 20;
       white-space: nowrap;
     }
     #status-indicator.show {
@@ -355,13 +371,13 @@
     }
     #status-indicator::before {
       content: '';
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
-      background: #cfcfcf;
+      background: #0a0a0a;
     }
     #status-indicator.buffering::before {
-      background: #ffa500;
+      background: #fbbf24;
       animation: pulse 1.5s infinite;
     }
     #status-indicator.connected::before {
@@ -371,28 +387,31 @@
       background: #ef4444;
     }
 
-    /* Update notification banner */
+    /* Update notification banner - Liquid Glass style */
     #update-banner {
       position: fixed;
-      top: calc(70px + env(safe-area-inset-top));
+      top: calc(80px + env(safe-area-inset-top));
       left: 50%;
       transform: translateX(-50%) translateY(-20px);
-      background: linear-gradient(135deg, #311B0B 0%, #4a2a15 100%);
-      border-radius: 12px;
-      padding: 12px 20px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50px;
+      padding: 14px 24px;
       color: #fff;
       font-size: 0.95rem;
-      font-weight: 500;
+      font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
+      gap: 14px;
+      box-shadow: 
+        0 8px 32px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.2);
       opacity: 0;
       z-index: 1000;
       transition: opacity 0.4s ease, transform 0.4s ease;
-      max-width: calc(100vw - 32px);
+      max-width: calc(100vw - 48px);
       box-sizing: border-box;
     }
     #update-banner.show {
@@ -400,7 +419,7 @@
       transform: translateX(-50%) translateY(0);
     }
     #update-banner .update-icon {
-      font-size: 1.3rem;
+      font-size: 1.4rem;
     }
     #update-banner .update-text {
       flex: 1;
@@ -408,33 +427,41 @@
     }
     #update-banner .update-version {
       color: #4ade80;
-      font-weight: 700;
+      font-weight: 800;
+      text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
     }
     #update-banner .close-banner {
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
+      background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
+      border: 1px solid rgba(255,255,255,0.2);
       color: #fff;
-      width: 24px;
-      height: 24px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
-      transition: background 0.2s;
+      font-size: 16px;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-style: preserve-3d;
     }
     #update-banner .close-banner:hover {
-      background: rgba(255, 255, 255, 0.2);
+      transform: rotateX(15deg) scale(1.2);
+      background: linear-gradient(135deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.15) 100%);
+      border-color: rgba(255,255,255,0.4);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+    #update-banner .close-banner:active {
+      transform: scale(0.85) rotate(90deg);
     }
 
     @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.9); }
     }
 
     /*----------------------------------------*/
-    /* 6) Main content (centered, below header) */
+    /* 6) Main content - Dark mode centered layout */
     #main-content {
       position: absolute;
       top: 0;
@@ -444,291 +471,300 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding-top: calc(56px + env(safe-area-inset-top));
-      padding-bottom: calc(80px + env(safe-area-inset-bottom));
+      padding-top: calc(80px + env(safe-area-inset-top));
+      padding-bottom: calc(120px + env(safe-area-inset-bottom));
       box-sizing: border-box;
       text-align: center;
       z-index: 1;
     }
 
-    /* COVER CARD */
+    /* COVER CARD - Dark mode minimal style */
     #cover-card {
-      background: rgba(0, 0, 0, 0.4);
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 0 4px 32px rgba(0, 0, 0, 0.3);
+      background: transparent;
       display: inline-flex;
-      flex-direction: row;
+      flex-direction: column;
       align-items: center;
-      gap: 20px;
+      gap: 32px;
       max-width: calc(90vw - 32px);
       box-sizing: border-box;
-    }
-    #album-cover {
-      width: clamp(160px, 30vw, 280px);
-      height: clamp(160px, 30vw, 280px);
-      background: #333;
-      border-radius: 12px;
-      box-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
-      object-fit: cover;
-      object-position: center;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #ccc;
-      font-size: 3rem;
-      border: 3px solid #fff;
-      overflow: hidden;
-      position: relative;
-    }
-    #album-cover img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 12px;
-      position: absolute;
-      top: 0;
-      left: 0;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-    }
-    #album-cover img.visible {
-      opacity: 1;
     }
     #details {
       display: flex;
       flex-direction: column;
       justify-content: center;
       color: #fff;
-      text-align: left;
+      text-align: center;
     }
     #song-title {
-      font-size: clamp(1.5rem, 4vw, 2rem);
-      font-weight: 700;
-      margin: 0 0 8px;
-      letter-spacing: 0.5px;
+      font-size: clamp(1.8rem, 5vw, 2.5rem);
+      font-weight: 800;
+      margin: 0 0 12px;
+      letter-spacing: 1px;
       line-height: 1.2;
+      text-shadow: 0 0 30px var(--theme-glow), 0 0 60px var(--theme-glow-soft);
+      transition: text-shadow 1s ease;
     }
     #song-artist {
-      font-size: clamp(1rem, 3vw, 1.2rem);
-      font-weight: 400;
+      font-size: clamp(1.1rem, 3vw, 1.4rem);
+      font-weight: 500;
       margin: 0;
-      opacity: 0.9;
+      color: #aaa;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-shadow: 0 0 20px var(--theme-glow);
+      transition: text-shadow 1s ease;
     }
 
     /*----------------------------------------*/
-    /* 7) Bottom controls                     */
+    /* 7) Bottom controls - Liquid Glass style */
     #controls {
       position: absolute;
-      bottom: calc(16px + env(safe-area-inset-bottom));
+      bottom: calc(32px + env(safe-area-inset-bottom));
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.6);
-      border-radius: 32px;
-      padding: 8px 16px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 100%);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 50px;
+      padding: 12px 24px;
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 20px;
       box-sizing: border-box;
-      max-width: calc(100vw - 32px);
+      max-width: calc(100vw - 48px);
       z-index: 10;
+      overflow: hidden;
+      box-shadow: 
+        0 8px 32px rgba(0,0,0,0.4),
+        0 0 40px var(--theme-glow),
+        0 0 80px var(--theme-glow-soft),
+        inset 0 1px 0 rgba(255,255,255,0.15),
+        inset 0 -1px 0 rgba(0,0,0,0.1);
+      transition: box-shadow 0.3s ease,
+                  transform 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.7s ease;
     }
     #play-btn {
-      width: clamp(40px, 8vw, 50px);
-      height: clamp(40px, 8vw, 50px);
-      background: #fff;
-      border: none;
+      width: clamp(52px, 10vw, 64px);
+      height: clamp(52px, 10vw, 64px);
+      background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+      backdrop-filter: blur(10px);
+      transform-style: preserve-3d;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.3);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-      transition: background 0.2s;
+      box-shadow: 
+        0 4px 20px rgba(0,0,0,0.3),
+        inset 0 2px 0 rgba(255,255,255,0.3),
+        inset 0 -2px 0 rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
       padding: 0;
       flex-shrink: 0;
     }
     #play-btn:hover {
-      background: #eee;
+      transform: rotateX(15deg) scale(1.15);
+      background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.15) 100%);
+      border-color: rgba(var(--theme-color), 0.6);
+      box-shadow: 
+        0 20px 50px rgba(0,0,0,0.5),
+        0 0 40px var(--theme-glow),
+        0 0 80px var(--theme-glow-soft),
+        inset 0 2px 0 rgba(255,255,255,0.5),
+        inset 0 -2px 0 rgba(0,0,0,0.1);
+    }
+    #play-btn:active {
+      transform: scale(0.9);
+      transition: all 0.1s ease;
     }
     #play-btn svg {
-      width: clamp(18px, 4vw, 24px);
-      height: clamp(18px, 4vw, 24px);
-      fill: #311B0B;
+      width: clamp(22px, 5vw, 28px);
+      height: clamp(22px, 5vw, 28px);
+      fill: #fff;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
     }
-    #volume-slider {
-      -webkit-appearance: none;
-      width: clamp(80px, 20vw, 180px);
-      height: 4px;
-      background: #fff;
-      border-radius: 2px;
-      outline: none;
-      cursor: pointer;
+    /* Custom Volume Slider with rubber band effect */
+    #volume-container {
+      width: clamp(100px, 25vw, 200px);
+      height: 32px;
+      display: flex;
+      align-items: center;
       flex-shrink: 1;
-    }
-    #volume-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #311B0B;
       cursor: pointer;
-      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+      touch-action: none;
+      padding: 4px 15px;
+      margin: 0 -15px;
+      position: relative;
     }
-    #volume-slider::-moz-range-thumb {
-      width: 12px;
-      height: 12px;
+    #volume-track {
+      position: relative;
+      width: 100%;
+      height: 6px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 3px;
+    }
+    #volume-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      background: linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.7));
+      border-radius: 3px;
+      width: 100%;
+      pointer-events: none;
+    }
+    #volume-thumb {
+      position: absolute;
+      top: 50%;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
-      background: #311B0B;
+      background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.6) 100%);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255,255,255,0.5);
+      transform: translate(-50%, -50%);
+      left: 100%;
+      transition: width 0.15s ease, border-radius 0.15s ease, height 0.15s ease;
+      pointer-events: auto;
       cursor: pointer;
-      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+      z-index: 10;
     }
+    #volume-thumb.jumping {
+      transition: left 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.15s ease, height 0.15s ease;
+    }
+    #volume-thumb.dragging {
+      width: 26px;
+      height: 26px;
+    }
+    #volume-thumb.stretching {
+      border-radius: 50px;
+    }
+    #volume-fill {
+      transition: width 0.05s ease;
+    }
+    #volume-fill.jumping {
+      transition: width 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    /* Fullscreen button - Liquid Glass style with 3D */
     #fullscreen-btn {
       position: absolute;
       top: calc(12px + env(safe-area-inset-top));
-      right: calc(16px + env(safe-area-inset-right));
-      height: 40px;
-      min-width: 40px;
+      right: calc(20px + env(safe-area-inset-right));
+      height: 44px;
+      min-width: 44px;
       padding: 0;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50%;
       color: #fff;
       cursor: pointer;
       outline: none;
       pointer-events: auto;
       user-select: none;
-      transition: background 0.15s ease, transform 0.08s ease;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  transform 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.7s ease;
+      transform-style: preserve-3d;
+      box-shadow: 
+        0 4px 24px rgba(0,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.2),
+        inset 0 -1px 0 rgba(0,0,0,0.1);
     }
     #fullscreen-btn:hover {
-      background: rgba(255,255,255,0.1);
+      transform: rotateX(10deg) rotateY(8deg) scale(1.15);
+      background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
+      border-color: rgba(var(--theme-color), 0.5);
+      box-shadow: 
+        0 15px 40px rgba(0,0,0,0.5),
+        0 0 30px var(--theme-glow),
+        0 0 60px var(--theme-glow-soft),
+        inset 0 1px 0 rgba(255,255,255,0.4);
     }
     #fullscreen-btn:active {
-      transform: scale(0.98);
+      transform: scale(0.9);
+      transition: all 0.1s ease;
     }
     #fullscreen-btn svg {
       width: 20px;
       height: 20px;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
     }
 
-    /* --- ÚJ: Info notification dizájn --- */
-    #info-btn-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 0;
-    }
-    #info-notification {
-      position: absolute;
-      left: 100%;
-      top: 50%;
-      transform: translateY(-50%);
-      background: linear-gradient(135deg, #311B0B 0%, #4a2a15 100%);
-      color: #fff;
-      font-size: 1rem;
-      font-weight: 600;
-      padding: 9px 18px 9px 18px;
-      border-radius: 12px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.28);
-      border: 1px solid rgba(255,255,255,0.13);
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      animation: fadeIn 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
-      transition: opacity 0.3s, transform 0.3s;
-      opacity: 1;
-      pointer-events: auto; /* hogy biztosan látható legyen */
-      user-select: none;
-      min-width: 150px;
-      white-space: nowrap;
-    }
-    #info-notification .arrow-left {
-      display: block;
-      width: 0;
-      height: 0;
-      border-top: 10px solid transparent;
-      border-bottom: 10px solid transparent;
-      border-right: 14px solid #4a2a15;
-      margin-left: -12px;
-      margin-right: 0;
-      filter: drop-shadow(0 0 6px #4ade80aa);
-      animation: arrowBubblePulse 1.2s infinite alternate;
-    }
-    @keyframes arrowBubblePulse {
-      0% { filter: drop-shadow(0 0 6px #4ade8088); }
-      100% { filter: drop-shadow(0 0 12px #4ade80); }
-    }
-
-    /* Mobilon igazítás */
-    @media (max-width: 600px) {
-      #info-notification {
-        font-size: 0.98rem;
-        min-width: 100px;
-        padding: 7px 10px 7px 12px;
-      }
-      #info-notification .arrow-left {
-        border-top: 7px solid transparent;
-        border-bottom: 7px solid transparent;
-        border-right: 10px solid #4a2a15;
-        margin-left: -8px;
-      }
-    }
-
+    /*----------------------------------------*/
+    /* 8) Portrait/mobile corrections          */
     @media only screen and (max-width: 600px) and (orientation: portrait) {
       #cover-card {
         flex-direction: column;
         align-items: center;
+        gap: 20px;
+      }
+      .album-cube-wrapper {
+        width: clamp(200px, 60vw, 260px);
+        height: clamp(200px, 60vw, 260px);
       }
       #details {
         text-align: center;
-        margin-top: 12px;
       }
       #controls {
-        gap: 12px;
-        padding: 8px 16px;
+        gap: 16px;
+        padding: 10px 20px;
       }
       #volume-slider {
-        width: 120px;
+        width: 100px;
       }
       #stats-panel {
         width: 100vw;
         right: 0;
-        padding: 15px;
+        padding: 24px;
         transform: translateX(100%);
       }
       #stats-panel.active {
         transform: translateX(0);
       }
+      #info-btn {
+        padding: 0;
+        min-width: 44px;
+      }
+      #info-btn span {
+        display: none;
+      }
     }
 
     @media only screen and (max-width: 900px) and (orientation: landscape) {
-      #album-cover {
-        width: clamp(80px, 15vw, 120px) !important;
-        height: clamp(80px, 15vw, 120px) !important;
+      .album-cube-wrapper {
+        width: clamp(100px, 18vw, 150px) !important;
+        height: clamp(100px, 18vw, 150px) !important;
       }
       #cover-card {
+        flex-direction: row;
         max-width: calc(100vw - 64px);
-        padding: 12px 16px;
-        gap: 16px;
+        gap: 20px;
+      }
+      #details {
+        text-align: left;
       }
       #song-title {
-        font-size: clamp(1.2rem, 3vw, 1.6rem);
-        margin: 0 0 4px;
+        font-size: clamp(1.4rem, 3vw, 1.8rem);
+        margin: 0 0 8px;
       }
       #song-artist {
-        font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+        font-size: clamp(1rem, 2vw, 1.2rem);
       }
       #stats-panel {
-        width: 280px;
-        right: -280px;
-        padding: 12px;
-        font-size: 0.75rem;
+        width: 320px;
+        padding: 20px;
+        font-size: 0.9rem;
       }
     }
 
@@ -736,20 +772,496 @@
       from { opacity: 0; transform: translateY(-8px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
+    /* ========== ANIMATION MAGIC ========== */
+    
+    /* 3D Tilt + Glow effect for buttons */
+    .btn-3d {
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-style: preserve-3d;
+      perspective: 1000px;
+    }
+    .btn-3d:hover {
+      transform: rotateX(8deg) rotateY(-5deg) scale(1.08);
+      box-shadow: 
+        0 15px 40px rgba(0,0,0,0.5),
+        0 0 30px rgba(255,255,255,0.15),
+        inset 0 1px 0 rgba(255,255,255,0.4);
+    }
+    .btn-3d:active {
+      transform: scale(0.95);
+      transition: all 0.1s ease;
+    }
+    
+    /* Glow pulse animation */
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(255,255,255,0.1); }
+      50% { box-shadow: 0 0 40px rgba(255,255,255,0.3), 0 0 60px rgba(255,255,255,0.1); }
+    }
+    
+    /* Song title animation on new song */
+    @keyframes songSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+        filter: blur(10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
+    }
+    
+    @keyframes songGlow {
+      0% { text-shadow: 0 0 0 transparent; }
+      50% { text-shadow: 0 0 30px rgba(255,255,255,0.5), 0 0 60px rgba(255,255,255,0.2); }
+      100% { text-shadow: 0 0 0 transparent; }
+    }
+    
+    .song-new {
+      animation: songSlideIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), songGlow 1.5s ease-out 0.3s;
+    }
+    
+    /* Clickable song title */
+    #song-title {
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      display: inline-block;
+    }
+    #song-title:hover {
+      transform: scale(1.03) translateY(-2px);
+      text-shadow: 0 0 20px rgba(255,0,0,0.4), 0 0 40px rgba(255,0,0,0.2);
+    }
+    #song-title:active {
+      transform: scale(0.98);
+    }
+    #song-title::after {
+      content: '';
+      position: absolute;
+      right: -28px;
+      top: 50%;
+      width: 20px;
+      height: 20px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%23ff0000'/%3E%3Cpath d='M9.5 7.5v9l7-4.5z' fill='white'/%3E%3C/svg%3E");
+      background-size: contain;
+      background-repeat: no-repeat;
+      opacity: 0;
+      transform: translateY(-50%) scale(0);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    #song-title:hover::after {
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+    }
+    
+    /* Artist name hover */
+    #song-artist {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    #song-artist:hover {
+      color: #fff;
+      letter-spacing: 4px;
+    }
+    
+    /* Play button special animations */
+    @keyframes playBounce {
+      0% { transform: scale(1); }
+      25% { transform: scale(1.3); }
+      50% { transform: scale(0.9); }
+      75% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    
+    @keyframes pauseShake {
+      0%, 100% { transform: rotate(0); }
+      25% { transform: rotate(-10deg); }
+      75% { transform: rotate(10deg); }
+    }
+    
+    #play-btn.playing-anim {
+      animation: playBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    #play-btn.pausing-anim {
+      animation: pauseShake 0.3s ease;
+    }
+    
+    /* Cover pulse on new song */
+    @keyframes coverPulse {
+      0% { transform: scale(1); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); }
+      50% { transform: scale(1.05); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 60px rgba(255,255,255,0.1); }
+      100% { transform: scale(1); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); }
+    }
+    
+    /* 3D Cube flip animation for album cover */
+    .album-cube-wrapper {
+      width: clamp(180px, 32vw, 280px);
+      height: clamp(180px, 32vw, 280px);
+      perspective: 1200px;
+      position: relative;
+      cursor: pointer;
+      z-index: 10;
+      transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                  height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    
+    .album-cube-wrapper.expanded {
+      width: clamp(280px, 55vw, 450px);
+      height: clamp(280px, 55vw, 450px);
+    }
+    
+    .album-cube-wrapper:hover:not(.expanded) {
+      transform: scale(1.05);
+    }
+    
+    #details {
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  opacity 0.4s ease;
+      z-index: 5;
+      position: relative;
+    }
+    
+    #details.text-slide-up {
+      z-index: 1;
+    }
+    
+    #cover-card.expanded #details {
+      transform: scale(0.75);
+      opacity: 0.7;
+    }
+    
+    .album-cube {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    
+    .cube-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #1e1e1e;
+      box-shadow: 
+        0 15px 50px rgba(0, 0, 0, 0.5),
+        0 0 60px var(--theme-glow),
+        0 0 100px var(--theme-glow-soft);
+      transition: box-shadow 1s ease;
+    }
+    
+    .cube-face img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 20px;
+    }
+    
+    .cube-face-front {
+      transform: rotateY(0deg);
+    }
+    
+    .cube-face-back {
+      transform: rotateY(180deg);
+    }
+    
+    /* Simple flip - just rotate Y 180deg */
+    @keyframes cubeFlipOnce {
+      0% {
+        transform: rotateY(0deg) scale(1);
+      }
+      50% {
+        transform: rotateY(90deg) scale(0.95);
+      }
+      100% {
+        transform: rotateY(180deg) scale(1);
+      }
+    }
+    
+    .album-cube.flipping {
+      animation: cubeFlipOnce 0.7s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    }
+    
+    /* Fade transition */
+    @keyframes fadeTransition {
+      0% { opacity: 1; }
+      50% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    .album-cube.fade-transition {
+      animation: fadeTransition 0.8s ease forwards;
+    }
+    .album-cube.fade-transition .cube-face-back {
+      transform: rotateY(0deg);
+    }
+    
+    /* Flashbang transition */
+    @keyframes flashbangTransition {
+      0% { 
+        opacity: 1; 
+        filter: brightness(1) blur(0px);
+      }
+      30% { 
+        opacity: 1; 
+        filter: brightness(4) blur(10px);
+      }
+      50% { 
+        opacity: 1; 
+        filter: brightness(8) blur(20px);
+      }
+      70% { 
+        opacity: 1; 
+        filter: brightness(4) blur(10px);
+      }
+      100% { 
+        opacity: 1; 
+        filter: brightness(1) blur(0px);
+      }
+    }
+    @keyframes flashbangGlow {
+      0% { 
+        box-shadow: 0 15px 50px rgba(0,0,0,0.5), 0 0 60px var(--theme-glow);
+      }
+      30% { 
+        box-shadow: 0 0 100px rgba(255,255,255,0.8), 0 0 200px rgba(255,255,255,0.6), 0 0 300px rgba(255,255,255,0.4);
+      }
+      50% { 
+        box-shadow: 0 0 150px rgba(255,255,255,1), 0 0 300px rgba(255,255,255,0.8), 0 0 400px rgba(255,255,255,0.5);
+      }
+      70% { 
+        box-shadow: 0 0 100px rgba(255,255,255,0.8), 0 0 200px rgba(255,255,255,0.6), 0 0 300px rgba(255,255,255,0.4);
+      }
+      100% { 
+        box-shadow: 0 15px 50px rgba(0,0,0,0.5), 0 0 60px var(--theme-glow);
+      }
+    }
+    .album-cube.flashbang-transition {
+      animation: flashbangTransition 1s ease forwards;
+    }
+    .album-cube.flashbang-transition .cube-face {
+      animation: flashbangGlow 1s ease forwards;
+    }
+    .album-cube.flashbang-transition .cube-face-back {
+      transform: rotateY(0deg);
+    }
+    
+    /* Flashbang overlay for full screen effect */
+    #flashbang-overlay {
+      position: fixed;
+      inset: 0;
+      background: white;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    #flashbang-overlay.active {
+      animation: flashbangWhite 2.5s ease-out forwards;
+    }
+    @keyframes flashbangWhite {
+      0% { opacity: 0; }
+      5% { opacity: 0.85; }
+      100% { opacity: 0; }
+    }
+    
+    /* UI wrapper for flashbang blur effect */
+    #ui-wrapper {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+    }
+    #ui-wrapper.flashbang-blur {
+      filter: blur(50px);
+      transition: filter 0.1s ease-out;
+    }
+    #ui-wrapper.flashbang-blur-out {
+      filter: blur(0.01px);
+      transition: filter 4s ease-out;
+    }
+    
+    /* Slide transition */
+    @keyframes slideOutRight {
+      0% { 
+        transform: translateX(0) scale(1); 
+      }
+      100% { 
+        transform: translateX(calc(100vw)); 
+      }
+    }
+    @keyframes slideInLeft {
+      0% { 
+        transform: translateX(calc(-100vw)); 
+      }
+      100% { 
+        transform: translateX(0) scale(1); 
+      }
+    }
+    
+    /* Step 1: Artist slides up behind title (no scale change) */
+    #song-artist.artist-hide-behind-title {
+      animation: artistHideBehindTitle 0.4s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    }
+    
+    /* Step 2: Title shrinks and goes into album cover */
+    #song-title.title-slide-up {
+      animation: textShrinkIntoAlbumTitle 0.7s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    }
+    
+    /* Reverse: Title comes down first */
+    #song-title.title-slide-down {
+      animation: textGrowFromAlbumTitle 0.7s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    }
+    
+    /* Reverse: Artist appears from behind title */
+    #song-artist.artist-show-from-title {
+      animation: artistShowFromTitle 0.4s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    }
+    
+    .album-cube-wrapper.slide-out {
+      animation: slideOutRight 0.6s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+    }
+    .album-cube-wrapper.slide-in {
+      animation: slideInLeft 0.6s cubic-bezier(0.0, 0, 0.2, 1) forwards;
+    }
+    
+    /* Settings button styles */
+    .settings-group {
+      margin-top: 24px;
+    }
+    .settings-group h3 {
+      margin: 0 0 16px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #666;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .transition-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .transition-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      background: #1e1e1e;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+    }
+    .transition-btn:hover {
+      background: #2a2a2a;
+      border-color: rgba(255,255,255,0.1);
+    }
+    .transition-btn.active {
+      background: linear-gradient(135deg, rgba(var(--theme-color), 0.2) 0%, rgba(var(--theme-color), 0.1) 100%);
+      border-color: rgba(var(--theme-color), 0.5);
+      box-shadow: 0 0 20px rgba(var(--theme-color), 0.2);
+    }
+    .transition-btn .btn-icon {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .transition-btn .btn-content {
+      flex: 1;
+    }
+    .transition-btn .btn-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 2px;
+    }
+    .transition-btn .btn-desc {
+      font-size: 0.75rem;
+      color: #888;
+    }
+    
+    /* Controls bar hover glow - mouse following */
+    #controls-glow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border-radius: 50px;
+    }
+    #controls:hover #controls-glow {
+      opacity: 1;
+    }
+    #controls:hover {
+      box-shadow: 
+        0 12px 48px rgba(0,0,0,0.5),
+        0 0 50px var(--theme-glow),
+        0 0 100px var(--theme-glow-soft),
+        inset 0 1px 0 rgba(255,255,255,0.3);
+    }
+    
+    /* Status indicator slide animation */
+    @keyframes statusSlide {
+      0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px) scale(0.8);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0) scale(1);
+      }
+    }
+    
+    #status-indicator.show {
+      animation: statusSlide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    
+    /* Logo hover effect */
+    #logo {
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+    }
+    #logo:hover {
+      transform: scale(1.1);
+      text-shadow: 0 0 30px rgba(255,255,255,0.5);
+      letter-spacing: 5px;
+    }
+
   </style>
 </head>
 <body>
-  <!-- 1) Blurred background -->
-  <img id="bg-blur" src="" alt="Background Cover">
+  <!-- UI Wrapper for flashbang blur effect -->
+  <div id="ui-wrapper">
+  <!-- INTRO / LOADING SCREEN -->
+  <div id="intro">
+    <div id="intro-logo">HaverokFM</div>
+  </div>
+
+  <!-- 1) Blurred background (dual layer for crossfade) -->
+  <img id="bg-blur-1" class="bg-blur active" src="" alt="Background Cover">
+  <img id="bg-blur-2" class="bg-blur" src="" alt="Background Cover">
 
   <!-- 2) Header -->
   <div id="header">
     <div id="logo">HaverokFM</div>
-
-    <!-- Duplikált info (About) gomb a fullscreen mellé -->
-    <div id="info-btn-wrapper2" style="position:absolute; top:0; right:calc(64px + 48px + env(safe-area-inset-right));">
-      <button id="info-btn2">Próbáld ki az új weboldalt &#x2794;</button>
-    </div>
 
     <!-- Fullscreen button -->
     <button id="fullscreen-btn" aria-label="Fullscreen" title="Fullscreen">
@@ -762,24 +1274,17 @@
     </button>
 
     <!-- info (About) button -->
-    <div id="info-btn-wrapper">
-      <button id="info-btn" aria-label="Show stats" title="Stats">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" fill="none"/>
-          <text x="12" y="17" text-anchor="middle" font-size="14" font-weight="bold" fill="currentColor">i</text>
-        </svg>
-      </button>
-    </div>
+    <button id="info-btn" aria-label="Show stats" title="Stats">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+      </svg>
+      <span>INFO</span>
+    </button>
   </div>
 
   <!-- Settings & Stats Panel -->
   <div id="stats-panel">
     <button id="close-stats" aria-label="Close">×</button>
-
-    <div style="margin: 24px 0 16px 0; text-align: center;">
-      <div style="font-size: 1.1em; font-weight: bold; margin-bottom: 10px;">Próbáld ki a fejlesztés alatt álló weboldalt</div>
-      <a href="https://hg-erik.github.io/haverokfm/test/" target="_blank" rel="noopener" style="display: inline-block; padding: 10px 28px; background: #4ade80; color: #222; border-radius: 8px; font-weight: bold; text-decoration: none; font-size: 1em; transition: background 0.15s;">lesgo</a>
-    </div>
     <h2>About</h2>
     <p>This is an internet radio by Haverok for Haverok. Made by Erik.</p>
 
@@ -799,8 +1304,46 @@
 
     <div class="divider"></div>
     
-    <div style="text-align: center; margin-top: 20px;">
-      <div id="logo" style="position: relative; top: 0; left: 0; font-size: 1.8rem; font-weight: 600; letter-spacing: 2px; color: #fff;">HaverokFM</div>
+    <h2>Settings</h2>
+    <div class="settings-group">
+      <h3>Zeneváltás animáció</h3>
+      <div class="transition-options">
+        <button class="transition-btn active" data-transition="cube">
+          <span class="btn-icon">🎲</span>
+          <div class="btn-content">
+            <div class="btn-title">3D Kocka</div>
+            <div class="btn-desc">Klasszikus 3D forgatás</div>
+          </div>
+        </button>
+        <button class="transition-btn" data-transition="fade">
+          <span class="btn-icon">🌫️</span>
+          <div class="btn-content">
+            <div class="btn-title">Fade</div>
+            <div class="btn-desc">Egyszerű áthalványulás</div>
+          </div>
+        </button>
+        <button class="transition-btn" data-transition="flashbang">
+          <span class="btn-icon">💥</span>
+          <div class="btn-content">
+            <div class="btn-title">Flashbang</div>
+            <div class="btn-desc">Villanás és bloom robbanás</div>
+          </div>
+        </button>
+        <button class="transition-btn" data-transition="slide">
+          <span class="btn-icon">➡️</span>
+          <div class="btn-content">
+            <div class="btn-title">Slide</div>
+            <div class="btn-desc">Szöveg és kép csúsztatás</div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    
+    <div style="text-align: center; margin-top: 32px;">
+      <div style="font-size: 2rem; font-weight: 800; letter-spacing: 3px; color: #fff; text-transform: uppercase;">HaverokFM</div>
+      <div style="font-size: 0.85rem; color: #666; margin-top: 8px; letter-spacing: 2px;">INTERNET RÁDIÓ</div>
     </div>
   </div>
 
@@ -816,11 +1359,19 @@
   <!-- 3) Main content -->
   <div id="main-content">
     <div id="cover-card">
-      <div id="album-cover">
-        <img src="https://via.placeholder.com/280?text=HaverokFM" alt="Album cover">
+      <!-- 3D Cube Album Cover -->
+      <div class="album-cube-wrapper" id="album-cover-wrapper">
+        <div class="album-cube" id="album-cube">
+          <div class="cube-face cube-face-front" id="cube-front">
+            <img src="https://erik-server.ddns.net/image" alt="Album cover" id="cover-front-img">
+          </div>
+          <div class="cube-face cube-face-back" id="cube-back">
+            <img src="https://erik-server.ddns.net/image" alt="Album cover" id="cover-back-img">
+          </div>
+        </div>
       </div>
       <div id="details">
-        <div id="song-title">Nincs duma (Csak zene)</div>
+        <div id="song-title">Betöltés...</div>
         <div id="song-artist">HaverokFM</div>
       </div>
     </div>
@@ -828,6 +1379,7 @@
 
   <!-- 4) Bottom controls -->
   <div id="controls">
+    <div id="controls-glow"></div>
     <button id="play-btn" aria-label="Play/Pause">
       <svg id="play-icon" viewBox="0 0 64 64">
         <polygon points="16,8 56,32 16,56"></polygon>
@@ -837,14 +1389,36 @@
         <rect x="36" y="12" width="12" height="40"></rect>
       </svg>
     </button>
-    <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="1">
+    <div id="volume-container">
+      <div id="volume-track">
+        <div id="volume-fill"></div>
+        <div id="volume-thumb"></div>
+      </div>
+    </div>
+    <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="1" style="display:none">
     <audio id="audio" preload="none"></audio>
-    <!-- Status indicator inside controls -->
-    <div id="status-indicator"></div>
   </div>
 
+  <!-- Status indicator (outside controls for visibility) -->
+  <div id="status-indicator"></div>
+  </div><!-- End of ui-wrapper -->
+  
+  <!-- Flashbang overlay (outside wrapper so it's not blurred) -->
+  <div id="flashbang-overlay"></div>
+
+</body>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // ========== INTRO ANIMATION ==========
+      const intro = document.getElementById('intro');
+      
+      // Simple: wait 1.5s then fade out
+      setTimeout(() => {
+        intro.classList.add('hide');
+        setTimeout(() => intro.remove(), 500);
+      }, 1500);
+      
+      // ========== MAIN APP ==========
       const audio        = document.getElementById('audio');
       const playBtn      = document.getElementById('play-btn');
       const playIcon     = document.getElementById('play-icon');
@@ -852,11 +1426,45 @@
       const volumeSlider = document.getElementById('volume-slider');
       const statusIndicator = document.getElementById('status-indicator');
       const statsBtn     = document.getElementById('info-btn');
-      const infoBtn2     = document.getElementById('info-btn2');
       const statsPanel   = document.getElementById('stats-panel');
       const closeStatsBtn = document.getElementById('close-stats');
       const fullscreenBtn = document.getElementById('fullscreen-btn');
       const fullscreenIcon = document.getElementById('fullscreen-icon');
+      
+      // ========== EASTER EGG ==========
+      const logoElement = document.getElementById('logo');
+      let logoClickCount = 0;
+      let logoClickTimer = null;
+      let easterEggActive = false;
+      const easterEggImage = 'https://media.discordapp.net/attachments/1096730017242816603/1444306084864069704/image.png?ex=693817dc&is=6936c65c&hm=88741364ca8e94ab1af25fbe15bcc86fd9c237c405a3b3bd69ee4663745e4434&=&format=webp&quality=lossless';
+      
+      logoElement.addEventListener('click', () => {
+        logoClickCount++;
+        
+        // Reset counter after 2 seconds of no clicks
+        clearTimeout(logoClickTimer);
+        logoClickTimer = setTimeout(() => {
+          logoClickCount = 0;
+        }, 2000);
+        
+        // 5 clicks = easter egg!
+        if (logoClickCount >= 5 && !easterEggActive) {
+          logoClickCount = 0;
+          easterEggActive = true;
+          
+          // Flash effect
+          logoElement.style.transform = 'scale(1.5)';
+          setTimeout(() => {
+            logoElement.style.transform = '';
+          }, 300);
+          
+          // Replace album cover with easter egg image
+          const coverFront = document.getElementById('cover-front-img');
+          const coverBack = document.getElementById('cover-back-img');
+          if (coverFront) coverFront.src = easterEggImage;
+          if (coverBack) coverBack.src = easterEggImage;
+        }
+      });
       const exitFullscreenIcon = document.getElementById('exit-fullscreen-icon');
 
       const streamUrl = "https://erik-server.ddns.net/stream";
@@ -877,11 +1485,11 @@
       const updateBanner = document.getElementById('update-banner');
       const closeBannerBtn = updateBanner.querySelector('.close-banner');
       
-      // Check if user has seen the banner (localStorage)
+      // Check if user has seen the banner (localStorage) - show after intro
       if (!localStorage.getItem('haverokfm-update-seen-2.0')) {
         setTimeout(() => {
           updateBanner.classList.add('show');
-        }, 1000);
+        }, 3500); // Show after intro animation finishes
       }
       
       closeBannerBtn.addEventListener('click', () => {
@@ -894,30 +1502,439 @@
       audio.crossOrigin = "anonymous";
       audio.volume = volumeSlider.value;
 
-      function setAlbumCover(url) {
-        if (currentCoverUrl === url) return;
-        currentCoverUrl = url;
-        
-        const img = new Image();
-        img.crossOrigin = "anonymous";
-        
-        img.onload = () => {
-          const existingImg = document.querySelector('#album-cover img');
-          if (existingImg) {
-            existingImg.src = url;
-            existingImg.classList.add('visible');
+      // Extract dominant color from image and set theme
+      function extractDominantColor(imgElement) {
+        try {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          const size = 50;
+          canvas.width = size;
+          canvas.height = size;
+          
+          ctx.drawImage(imgElement, 0, 0, size, size);
+          const imageData = ctx.getImageData(0, 0, size, size).data;
+          
+          let r = 0, g = 0, b = 0, count = 0;
+          
+          // Also track average brightness for fallback
+          let totalBrightness = 0;
+          let pixelCount = 0;
+          
+          for (let i = 0; i < imageData.length; i += 16) {
+            const pr = imageData[i];
+            const pg = imageData[i + 1];
+            const pb = imageData[i + 2];
+            const pa = imageData[i + 3];
+            
+            if (pa > 200) {
+              const brightness = (pr + pg + pb) / 3;
+              totalBrightness += brightness;
+              pixelCount++;
+              
+              if (brightness > 30 && brightness < 220) {
+                const max = Math.max(pr, pg, pb);
+                const min = Math.min(pr, pg, pb);
+                const saturation = max > 0 ? (max - min) / max : 0;
+                
+                if (saturation > 0.15) {
+                  r += pr;
+                  g += pg;
+                  b += pb;
+                  count++;
+                }
+              }
+            }
           }
-          document.getElementById('bg-blur').src = url;
+          
+          if (count > 0) {
+            r = Math.round(r / count);
+            g = Math.round(g / count);
+            b = Math.round(b / count);
+            
+            const boost = 1.2;
+            r = Math.min(255, Math.round(r * boost));
+            g = Math.min(255, Math.round(g * boost));
+            b = Math.min(255, Math.round(b * boost));
+            
+            document.documentElement.style.setProperty('--theme-color', `${r}, ${g}, ${b}`);
+          } else {
+            // No colorful pixels found - use neutral gray/white based on image brightness
+            const avgBrightness = pixelCount > 0 ? totalBrightness / pixelCount : 128;
+            
+            if (avgBrightness < 60) {
+              // Dark image (like black album cover) - use soft white glow
+              document.documentElement.style.setProperty('--theme-color', '180, 180, 180');
+            } else if (avgBrightness > 200) {
+              // Very bright image - use darker glow
+              document.documentElement.style.setProperty('--theme-color', '100, 100, 100');
+            } else {
+              // Medium brightness - neutral gray
+              document.documentElement.style.setProperty('--theme-color', '150, 150, 150');
+            }
+          }
+        } catch (e) {
+          console.log('Could not extract color:', e);
+        }
+      }
+
+      // 3D Cube elements
+      const albumCube = document.getElementById('album-cube');
+      const albumCubeWrapper = document.getElementById('album-cover-wrapper');
+      const coverFrontImg = document.getElementById('cover-front-img');
+      const coverBackImg = document.getElementById('cover-back-img');
+      const bgBlur1 = document.getElementById('bg-blur-1');
+      const bgBlur2 = document.getElementById('bg-blur-2');
+      let activeBgLayer = 1; // Track which bg layer is currently visible
+      const flashbangOverlay = document.getElementById('flashbang-overlay');
+      const details = document.getElementById('details');
+      const songTitle = document.getElementById('song-title');
+      const songArtist = document.getElementById('song-artist');
+      let isShowingFront = true;
+      let isFlipping = false;
+      let pendingCoverUrl = null;
+      let currentTransitionType = localStorage.getItem('haverokfm-transition') || 'cube';
+
+      // Preview transition function - uses current cover
+      function previewTransition(transitionType) {
+        if (isFlipping) return;
+        
+        const currentUrl = coverFrontImg.src;
+        const tempTransition = currentTransitionType;
+        currentTransitionType = transitionType;
+        
+        isFlipping = true;
+        
+        switch (transitionType) {
+          case 'fade':
+            performFadeTransition(currentUrl);
+            break;
+          case 'flashbang':
+            performFlashbangTransition(currentUrl);
+            break;
+          case 'slide':
+            performSlideTransition(currentUrl);
+            break;
+          case 'cube':
+          default:
+            performCubeTransition(currentUrl);
+            break;
+        }
+        
+        currentTransitionType = tempTransition;
+      }
+
+      // Transition buttons handler
+      document.querySelectorAll('.transition-btn').forEach(btn => {
+        // Set initial active state
+        if (btn.dataset.transition === currentTransitionType) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+        
+        btn.addEventListener('click', () => {
+          const newTransition = btn.dataset.transition;
+          
+          // Don't do anything if already selected
+          if (newTransition === currentTransitionType) return;
+          
+          document.querySelectorAll('.transition-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          
+          // Preview the transition first
+          previewTransition(newTransition);
+          
+          // Then save it
+          currentTransitionType = newTransition;
+          localStorage.setItem('haverokfm-transition', currentTransitionType);
+        });
+      });
+
+      let isFirstLoad = true;
+
+      function setAlbumCover(url) {
+        console.log('setAlbumCover called:', url, 'transition:', currentTransitionType);
+        
+        // If already flipping, queue this update
+        if (isFlipping) {
+          console.log('Already flipping, queuing...');
+          pendingCoverUrl = url;
+          return;
+        }
+        
+        isFlipping = true;
+        
+        const newImg = new Image();
+        newImg.crossOrigin = "anonymous";
+        
+        newImg.onload = () => {
+          console.log('Image loaded successfully');
+          
+          // Extract dominant color for theme
+          extractDominantColor(newImg);
+          
+          // Crossfade background - load new image into inactive layer then swap
+          if (activeBgLayer === 1) {
+            bgBlur2.src = newImg.src;
+            bgBlur2.classList.add('active');
+            bgBlur1.classList.remove('active');
+            activeBgLayer = 2;
+          } else {
+            bgBlur1.src = newImg.src;
+            bgBlur1.classList.add('active');
+            bgBlur2.classList.remove('active');
+            activeBgLayer = 1;
+          }
+          
+          // Skip animation on first load
+          if (isFirstLoad) {
+            isFirstLoad = false;
+            coverFrontImg.src = newImg.src;
+            coverBackImg.src = newImg.src;
+            // Also set the active bg layer immediately for first load
+            if (activeBgLayer === 1) {
+              bgBlur1.src = newImg.src;
+            } else {
+              bgBlur2.src = newImg.src;
+            }
+            applyPendingTextUpdate();
+            isFlipping = false;
+            updateMediaSession();
+            return;
+          }
+          
+          // Use the loaded image src for all transitions
+          const loadedUrl = newImg.src;
+          
+          switch (currentTransitionType) {
+            case 'fade':
+              performFadeTransition(loadedUrl);
+              break;
+            case 'flashbang':
+              performFlashbangTransition(loadedUrl);
+              break;
+            case 'slide':
+              performSlideTransition(loadedUrl);
+              break;
+            case 'cube':
+            default:
+              performCubeTransition(loadedUrl);
+              break;
+          }
           
           // Update Media Session with new artwork
           updateMediaSession();
         };
         
-        img.onerror = () => {
-          document.getElementById('album-cover').innerHTML = '📻';
+        newImg.onerror = () => {
+          console.error('Failed to load album cover:', url);
+          isFlipping = false;
+          
+          if (pendingCoverUrl) {
+            const pending = pendingCoverUrl;
+            pendingCoverUrl = null;
+            setTimeout(() => setAlbumCover(pending), 100);
+          }
         };
         
-        img.src = url;
+        newImg.src = url;
+      }
+      
+      function performCubeTransition(url) {
+        // Load new image into the hidden face
+        if (isShowingFront) {
+          coverBackImg.src = url;
+        } else {
+          coverFrontImg.src = url;
+        }
+        
+        requestAnimationFrame(() => {
+          albumCube.classList.add('flipping');
+          
+          // Update text at midpoint of flip
+          setTimeout(() => {
+            applyPendingTextUpdate();
+          }, 375);
+          
+          setTimeout(() => {
+            albumCube.classList.remove('flipping');
+            isShowingFront = !isShowingFront;
+            albumCube.style.transform = '';
+            coverFrontImg.src = url;
+            coverBackImg.src = url;
+            
+            finishTransition();
+          }, 750);
+        });
+      }
+      
+      function performFadeTransition(url) {
+        requestAnimationFrame(() => {
+          albumCube.classList.add('fade-transition');
+          
+          setTimeout(() => {
+            // Swap image and text at peak of fade
+            applyPendingTextUpdate();
+            coverFrontImg.src = url;
+            coverBackImg.src = url;
+          }, 400);
+          
+          setTimeout(() => {
+            albumCube.classList.remove('fade-transition');
+            finishTransition();
+          }, 800);
+        });
+      }
+      
+      function performFlashbangTransition(url) {
+        const uiWrapper = document.getElementById('ui-wrapper');
+        
+        requestAnimationFrame(() => {
+          // Start white flash animation
+          flashbangOverlay.classList.add('active');
+          // Add blur to entire UI (instant)
+          uiWrapper.classList.remove('flashbang-blur-out');
+          uiWrapper.classList.add('flashbang-blur');
+          albumCube.classList.add('flashbang-transition');
+          
+          setTimeout(() => {
+            // Swap image and text at peak brightness (instant flash moment)
+            applyPendingTextUpdate();
+            coverFrontImg.src = url;
+            coverBackImg.src = url;
+          }, 125);
+          
+          // Switch to blur-out class (CSS transition handles the 4s fade out)
+          setTimeout(() => {
+            uiWrapper.classList.remove('flashbang-blur');
+            uiWrapper.classList.add('flashbang-blur-out');
+          }, 200);
+          
+          // Remove white flash after 2.5s
+          setTimeout(() => {
+            flashbangOverlay.classList.remove('active');
+            albumCube.classList.remove('flashbang-transition');
+          }, 2500);
+          
+          // Finish transition and clean up blur class after 4s
+          setTimeout(() => {
+            uiWrapper.classList.remove('flashbang-blur-out');
+            finishTransition();
+          }, 4200);
+        });
+      }
+      
+      function performSlideTransition(url) {
+        requestAnimationFrame(() => {
+          // Calculate scale based on text width vs album cover width
+          const albumWidth = albumCubeWrapper.offsetWidth;
+          const albumHeight = albumCubeWrapper.offsetHeight;
+          const titleWidth = songTitle.offsetWidth;
+          const artistWidth = songArtist.offsetWidth;
+          const detailsRect = details.getBoundingClientRect();
+          const albumRect = albumCubeWrapper.getBoundingClientRect();
+          
+          // Distance from bottom of album to top of details
+          const distanceToAlbum = detailsRect.top - albumRect.bottom + albumHeight/2 + 30;
+          
+          // Calculate scale so text fits inside album cover (with some padding)
+          const targetWidth = albumWidth * 0.85;
+          const titleScale = Math.min(1, targetWidth / titleWidth);
+          const artistScale = Math.min(1, targetWidth / artistWidth);
+          
+          // Create dynamic keyframes
+          const styleId = 'slide-transition-keyframes';
+          let styleEl = document.getElementById(styleId);
+          if (!styleEl) {
+            styleEl = document.createElement('style');
+            styleEl.id = styleId;
+            document.head.appendChild(styleEl);
+          }
+          
+          // Get artist height for the hide animation
+          const artistHeight = songArtist.offsetHeight + 12; // +12 for gap
+          
+          // Dynamic keyframes
+          styleEl.textContent = `
+            @keyframes artistHideBehindTitle {
+              0% { transform: translateY(0); opacity: 1; }
+              100% { transform: translateY(-${artistHeight}px); opacity: 0; }
+            }
+            @keyframes artistShowFromTitle {
+              0% { transform: translateY(-${artistHeight}px); opacity: 0; }
+              100% { transform: translateY(0); opacity: 1; }
+            }
+            @keyframes textShrinkIntoAlbumTitle {
+              0% { transform: translateY(0) scale(1); opacity: 1; }
+              45% { transform: translateY(0) scale(${titleScale}); opacity: 1; }
+              90% { transform: translateY(-${distanceToAlbum}px) scale(${titleScale}); opacity: 1; }
+              100% { transform: translateY(-${distanceToAlbum}px) scale(${titleScale}); opacity: 0; }
+            }
+            @keyframes textGrowFromAlbumTitle {
+              0% { transform: translateY(-${distanceToAlbum}px) scale(${titleScale}); opacity: 0; }
+              10% { transform: translateY(-${distanceToAlbum}px) scale(${titleScale}); opacity: 1; }
+              55% { transform: translateY(0) scale(${titleScale}); opacity: 1; }
+              100% { transform: translateY(0) scale(1); opacity: 1; }
+            }
+          `;
+          
+          // Step 1: Artist slides up behind title first
+          songArtist.classList.add('artist-hide-behind-title');
+          
+          // Step 2: After artist is hidden, title shrinks and goes up
+          setTimeout(() => {
+            songTitle.classList.add('title-slide-up');
+            
+            // Step 3: After title animation, album cover slides out
+            setTimeout(() => {
+              albumCubeWrapper.classList.add('slide-out');
+              
+              setTimeout(() => {
+                // Swap the image and text while off-screen
+                applyPendingTextUpdate();
+                coverFrontImg.src = url;
+                coverBackImg.src = url;
+                
+                // Remove slide-out, add slide-in (comes from left)
+                albumCubeWrapper.classList.remove('slide-out');
+                albumCubeWrapper.classList.add('slide-in');
+                
+                setTimeout(() => {
+                  // Step 4: Title comes down from album
+                  songTitle.classList.remove('title-slide-up');
+                  songTitle.classList.add('title-slide-down');
+                  
+                  // Step 5: After title is down, artist appears
+                  setTimeout(() => {
+                    songArtist.classList.remove('artist-hide-behind-title');
+                    songArtist.classList.add('artist-show-from-title');
+                    
+                    setTimeout(() => {
+                      albumCubeWrapper.classList.remove('slide-in');
+                      songTitle.classList.remove('title-slide-down');
+                      songArtist.classList.remove('artist-show-from-title');
+                      finishTransition();
+                    }, 450);
+                  }, 650);
+                }, 450);
+              }, 650);
+            }, 650);
+          }, 400);
+        });
+      }
+      
+      function finishTransition() {
+        isFlipping = false;
+        console.log('Transition complete');
+        
+        // Process pending update if any - but only if different from what we just showed
+        if (pendingCoverUrl && pendingCoverUrl !== currentCoverUrl) {
+          const pending = pendingCoverUrl;
+          pendingCoverUrl = null;
+          setTimeout(() => setAlbumCover(pending), 100);
+        } else {
+          pendingCoverUrl = null; // Clear stale pending URLs
+        }
       }
 
       function updateMediaSession() {
@@ -955,8 +1972,8 @@
         try {
           const response = await fetch(metaUrl);
           const txt = await response.text();
-          let song = "Nincs duma (Csak zene)";
-          let artist = "HaverokFM";
+          let song = "NO DATA";
+          let artist = "ERROR";
 
           try {
             const j = JSON.parse(txt);
@@ -973,15 +1990,43 @@
           }
 
           if (lastSongData.title !== song || lastSongData.artist !== artist) {
-            lastSongData = { title: song, artist: artist };
-            document.getElementById('song-title').textContent = song;
-            document.getElementById('song-artist').textContent = artist;
-            setAlbumCover(coverUrl + '?t=' + Date.now());
-            updateMediaSession();
+            // Reset easter egg on new song
+            easterEggActive = false;
             
+            // Store new data but don't update text yet
+            const newSongData = { title: song, artist: artist };
+            
+            // Store pending text update for after transition
+            pendingTextUpdate = newSongData;
+            
+            // Start the album cover transition
+            const newCoverUrl = coverUrl + '?t=' + Date.now();
+            currentCoverUrl = newCoverUrl;
+            setAlbumCover(newCoverUrl);
+            
+            // Update browser tab title with current song
+            document.title = `HaverokFM - ${song}`;
+            
+            // Update lastSongData to prevent duplicate transitions
+            lastSongData = newSongData;
           }
         } catch (e) {
           console.error('Metadata error:', e);
+        }
+      }
+      
+      // Pending text update storage
+      let pendingTextUpdate = null;
+      
+      // Function to apply text update (called during transition)
+      function applyPendingTextUpdate() {
+        if (pendingTextUpdate) {
+          const titleEl = document.getElementById('song-title');
+          const artistEl = document.getElementById('song-artist');
+          titleEl.textContent = pendingTextUpdate.title;
+          artistEl.textContent = pendingTextUpdate.artist;
+          pendingTextUpdate = null;
+          updateMediaSession();
         }
       }
 
@@ -1117,11 +2162,234 @@
       }
 
       // Control event listeners
-      playBtn.addEventListener('click', togglePlay);
+      playBtn.addEventListener('click', () => {
+        // Add animation class based on current state
+        if (audio.paused) {
+          playBtn.classList.add('playing-anim');
+          setTimeout(() => playBtn.classList.remove('playing-anim'), 500);
+        } else {
+          playBtn.classList.add('pausing-anim');
+          setTimeout(() => playBtn.classList.remove('pausing-anim'), 300);
+        }
+        togglePlay();
+      });
       
-      volumeSlider.addEventListener('input', e => {
-        audio.volume = parseFloat(e.target.value);
+      // Custom Volume Slider with rubber band effect
+      const volumeContainer = document.getElementById('volume-container');
+      const volumeTrack = document.getElementById('volume-track');
+      const volumeFill = document.getElementById('volume-fill');
+      const volumeThumb = document.getElementById('volume-thumb');
+      
+      let isDragging = false;
+      let currentVolume = 1;
+      let displayVolume = 1; // Visual position (can exceed 0-1 for rubber band)
+      let dragStartX = 0;
+      let dragStartVolume = 0;
+      let velocity = 0;
+      let lastX = 0;
+      let lastTime = 0;
+      
+      function updateVolumeDisplay() {
+        // Clamp visual between -0.08 and 1.08 for subtle rubber band effect
+        const visualPos = Math.max(-0.08, Math.min(1.08, displayVolume));
+        const percent = visualPos * 100;
+        volumeFill.style.width = Math.max(0, Math.min(100, percent)) + '%';
+        volumeThumb.style.left = percent + '%';
+        
+        // Stretch thumb when overscrolling - more subtle
+        if (displayVolume < 0 || displayVolume > 1) {
+          const overscroll = displayVolume < 0 ? -displayVolume : displayVolume - 1;
+          const stretch = 1 + overscroll * 1.5;
+          volumeThumb.style.width = (22 * Math.min(stretch, 1.3)) + 'px';
+          volumeThumb.classList.add('stretching');
+        } else {
+          volumeThumb.style.width = '22px';
+          volumeThumb.classList.remove('stretching');
+        }
+      }
+      
+      function setVolume(vol, updateDisplay = true) {
+        currentVolume = Math.max(0, Math.min(1, vol));
+        audio.volume = currentVolume;
+        if (updateDisplay) {
+          displayVolume = currentVolume;
+          updateVolumeDisplay();
+        }
         updateStats();
+      }
+      
+      function snapBack() {
+        if (displayVolume === currentVolume) return;
+        
+        const diff = currentVolume - displayVolume;
+        const speed = Math.abs(velocity);
+        
+        // Bounce animation
+        let bounceAmount = Math.min(0.08, speed * 0.015);
+        if (Math.abs(diff) < 0.01) {
+          displayVolume = currentVolume;
+          updateVolumeDisplay();
+          return;
+        }
+        
+        // Smooth spring animation
+        const springStrength = 0.25;
+        const damping = 0.8;
+        displayVolume += diff * springStrength;
+        
+        updateVolumeDisplay();
+        requestAnimationFrame(snapBack);
+      }
+      
+      function handleDragStart(e) {
+        isDragging = true;
+        volumeThumb.classList.add('dragging');
+        const rect = volumeTrack.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        
+        // If clicking on track (not on thumb), jump to that position first with animation
+        if (e.target !== volumeThumb) {
+          const clickX = clientX - rect.left;
+          const newVolume = Math.max(0, Math.min(1, clickX / rect.width));
+          
+          // Add jumping class for smooth animation
+          volumeThumb.classList.add('jumping');
+          volumeFill.classList.add('jumping');
+          
+          displayVolume = newVolume;
+          currentVolume = newVolume;
+          audio.volume = newVolume;
+          updateVolumeDisplay();
+          
+          // Remove jumping class after animation
+          setTimeout(() => {
+            volumeThumb.classList.remove('jumping');
+            volumeFill.classList.remove('jumping');
+          }, 200);
+        }
+        
+        dragStartX = clientX;
+        dragStartVolume = displayVolume;
+        lastX = clientX;
+        lastTime = Date.now();
+        velocity = 0;
+        e.preventDefault();
+      }
+      
+      function handleDragMove(e) {
+        if (!isDragging) return;
+        
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const rect = volumeTrack.getBoundingClientRect();
+        const deltaX = clientX - dragStartX;
+        const deltaPercent = deltaX / rect.width;
+        
+        // Calculate velocity
+        const now = Date.now();
+        const dt = now - lastTime;
+        if (dt > 0) {
+          velocity = (clientX - lastX) / dt;
+        }
+        lastX = clientX;
+        lastTime = now;
+        
+        let newVolume = dragStartVolume + deltaPercent;
+        
+        // Apply resistance when overscrolling
+        if (newVolume < 0) {
+          newVolume = newVolume * 0.3; // Rubber band resistance
+        } else if (newVolume > 1) {
+          newVolume = 1 + (newVolume - 1) * 0.3; // Rubber band resistance
+        }
+        
+        displayVolume = newVolume;
+        setVolume(newVolume, false);
+        updateVolumeDisplay();
+        
+        e.preventDefault();
+      }
+      
+      function handleDragEnd(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        volumeThumb.classList.remove('dragging');
+        
+        // Snap back with bounce
+        requestAnimationFrame(snapBack);
+      }
+      
+      // Click on track to set volume
+      volumeContainer.addEventListener('click', (e) => {
+        if (isDragging) return;
+        if (e.target === volumeThumb) return; // Don't trigger on thumb click
+        const rect = volumeTrack.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const newVolume = Math.max(0, Math.min(1, clickX / rect.width));
+        displayVolume = newVolume;
+        setVolume(newVolume);
+      });
+      
+      // Mouse events - on both container and thumb
+      volumeContainer.addEventListener('mousedown', handleDragStart);
+      volumeThumb.addEventListener('mousedown', handleDragStart);
+      document.addEventListener('mousemove', handleDragMove);
+      document.addEventListener('mouseup', handleDragEnd);
+      
+      // Touch events - on both container and thumb
+      volumeContainer.addEventListener('touchstart', handleDragStart, { passive: false });
+      volumeThumb.addEventListener('touchstart', handleDragStart, { passive: false });
+      document.addEventListener('touchmove', handleDragMove, { passive: false });
+      document.addEventListener('touchend', handleDragEnd);
+      
+      // Initialize display
+      updateVolumeDisplay();
+      
+      // Song title click - open YouTube Music search
+      songTitle.addEventListener('click', () => {
+        const query = encodeURIComponent(`${lastSongData.artist} ${lastSongData.title}`);
+        window.open(`https://music.youtube.com/search?q=${query}`, '_blank');
+      });
+      
+      songArtist.addEventListener('click', () => {
+        const query = encodeURIComponent(lastSongData.artist);
+        window.open(`https://music.youtube.com/search?q=${query}`, '_blank');
+      });
+      
+      // Album cover 3D tilt effect on cube wrapper - smoother
+      const coverCard = document.getElementById('cover-card');
+      let tiltTimeout = null;
+      
+      // Album cover click to expand/collapse
+      albumCubeWrapper.addEventListener('click', (e) => {
+        // Don't toggle if we're in the middle of a flip animation
+        if (albumCube.classList.contains('flipping')) return;
+        
+        albumCubeWrapper.classList.toggle('expanded');
+        coverCard.classList.toggle('expanded');
+      });
+
+      albumCubeWrapper.addEventListener('mousemove', (e) => {
+        if (albumCube.classList.contains('flipping')) return;
+        
+        const rect = albumCubeWrapper.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        // Stronger rotation - divided by 12 for more effect
+        const rotateX = (y - centerY) / 12;
+        const rotateY = (centerX - x) / 12;
+        
+        // Smoother transition
+        albumCube.style.transition = 'transform 0.1s ease-out';
+        albumCube.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+      
+      albumCubeWrapper.addEventListener('mouseleave', () => {
+        if (albumCube.classList.contains('flipping')) return;
+        albumCube.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
+        albumCube.style.transform = '';
       });
 
       // Fullscreen controls
@@ -1150,12 +2418,6 @@
         statsPanel.classList.toggle('active');
         e.stopPropagation();
       });
-      if (infoBtn2) {
-        infoBtn2.addEventListener('click', e => {
-          statsPanel.classList.toggle('active');
-          e.stopPropagation();
-        });
-      }
       
       closeStatsBtn.addEventListener('click', () => {
         statsPanel.classList.remove('active');
@@ -1170,16 +2432,74 @@
       
       statsPanel.addEventListener('click', e => e.stopPropagation());
 
-      // Initialize
-      setAlbumCover(coverUrl);
-      fetchMetadata();
-      updateStats();
+      // Mouse-following glow effect on controls
+      const controls = document.getElementById('controls');
+      const controlsGlow = document.getElementById('controls-glow');
       
-      // Update metadata every 5 seconds
-      setInterval(fetchMetadata, 5000);
+      controls.addEventListener('mousemove', (e) => {
+        const rect = controls.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        controlsGlow.style.background = `
+          radial-gradient(
+            ellipse 180px 120px at ${x}px ${y}px,
+            rgba(255,255,255,0.15) 0%,
+            rgba(255,255,255,0.08) 40%,
+            rgba(255,255,255,0.03) 70%,
+            transparent 100%
+          )
+        `;
+      });
+      
+      controls.addEventListener('mouseleave', () => {
+        controlsGlow.style.background = 'transparent';
+      });
+
+      // Auto-hide UI when mouse is idle
+      let hideUITimeout = null;
+      
+      function showUI() {
+        document.body.classList.remove('ui-hidden');
+        clearTimeout(hideUITimeout);
+        hideUITimeout = setTimeout(hideUI, 3000);
+      }
+      
+      function hideUI() {
+        // Don't hide if stats panel is open or user is interacting with controls
+        if (statsPanel.classList.contains('active')) return;
+        document.body.classList.add('ui-hidden');
+      }
+      
+      // Show UI on any mouse movement
+      document.addEventListener('mousemove', showUI);
+      document.addEventListener('mousedown', showUI);
+      document.addEventListener('touchstart', showUI);
+      
+      // Keep UI visible when hovering over controls or buttons
+      controls.addEventListener('mouseenter', () => {
+        clearTimeout(hideUITimeout);
+      });
+      controls.addEventListener('mouseleave', () => {
+        hideUITimeout = setTimeout(hideUI, 3000);
+      });
+      
+      // Start the auto-hide timer
+      hideUITimeout = setTimeout(hideUI, 3000);
+
+      // Initialize - first set album cover, then fetch metadata after it's ready
+      // Use the cover URL directly without animation first time
+      setAlbumCover(coverUrl);
+      
+      // Delay first metadata fetch slightly to avoid race condition with initial load
+      setTimeout(() => {
+        fetchMetadata();
+        // Update metadata every 5 seconds after that
+        setInterval(fetchMetadata, 5000);
+      }, 500);
+      
+      updateStats();
       setInterval(updateStats, 1000);
     });
   </script>
-</body>
 </html>
-
