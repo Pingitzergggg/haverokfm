@@ -6,7 +6,7 @@
 "description": "This is an internet radio by Haverok for Haverok. Made by Erik.",
 "lang": "English",
 "dir": "auto",
-"theme_color": "#595555",
+"theme_color": "#000000",
 "background_color": "#000000",
 "orientation": "any",
 "icons": [
@@ -20,7 +20,7 @@
         "src": "/media/logo.png",
         "sizes": "192x192",
         "type": "image/png",
-        "purpose": "any"
+        "purpose": "maskable"
     }
 ]
 }
