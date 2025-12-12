@@ -1489,13 +1489,20 @@
       if (!localStorage.getItem('haverokfm-update-seen-2.0')) {
         setTimeout(() => {
           updateBanner.classList.add('show');
-        }, 3500); // Show after intro animation finishes
+        }, 3500); // Show after intro animation finishes 
+        setTimeout(closeBanner, 10000);
       }
       
       closeBannerBtn.addEventListener('click', () => {
-        updateBanner.classList.remove('show');
-        localStorage.setItem('haverokfm-update-seen-2.0', 'true');
+        closeBanner();
       });
+      
+      function closeBanner() {
+        if (!localStorage.getItem('haverokfm-update-seen-2.0')) {
+          updateBanner.classList.remove('show');
+          localStorage.setItem('haverokfm-update-seen-2.0', 'true');
+        }
+      }
 
       // Initialize audio
       audio.src = streamUrl;
